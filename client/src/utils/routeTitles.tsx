@@ -1,0 +1,27 @@
+const routeTitles: Record<string, string> = {
+    "/": "Dashboard",
+    "/transactions": "Transactions",
+    "/articles/create": "Articles > Create Article",
+    "/articles/generated": "Articles > Generated Article",
+    "/articles/keyword-projects": "Articles > Keyword Projects",
+    "/articles/ai-keyword-to-article": "Articles > AI Keyword to Article",
+    "/articles/steal-competitor-keyword": "Articles > Steal Competitor Keyword",
+    "/articles/import-keyword-from-gsc": "Articles > Import Keyword from GSC",
+    "/articles/manual-keyword-to-article": "Articles > Manual Keyword to Article",
+    "/articles/bulk-keyword-to-article": "Articles > Bulk Keyword to Article",
+    "/articles/longtail-keyword-to-article": "Articles > Longtail Keyword to Article",
+    "/articles/article-settings": "Articles > Article Settings",
+    "/settings": "Settings",
+    "/profile": "Profile",
+    "/auto-blog": "Auto Blog",
+    "/internal-links": "Internal Links",
+    "/free-backlinks": "Free Backlinks",
+    "/integrations": "Integrations",
+    "/subscriptions": "Subscriptions",
+    "/affiliate-program": "Affiliate Program",
+    "/help-center": "Help Center",
+    "/updates": "Updates",
+    "/live-chat-support": "Live Chat Support",
+}
+
+export default routeTitles
