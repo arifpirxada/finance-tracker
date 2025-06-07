@@ -1,20 +1,25 @@
-import type { HttpStatusCode } from "types";
+import type { HttpStatusCode } from 'types';
 
 class BaseError extends Error {
-    public readonly statusCode: HttpStatusCode;
-    public readonly isOperational: boolean;
+  public readonly statusCode: HttpStatusCode;
+  public readonly isOperational: boolean;
 
-    constructor(name: string, statusCode: HttpStatusCode, description: string, isOperational: boolean = true) {
-        super(description); // sets this.message = description
+  constructor(
+    name: string,
+    statusCode: HttpStatusCode,
+    description: string,
+    isOperational: boolean = true
+  ) {
+    super(description); // sets this.message = description
 
-        Object.setPrototypeOf(this, new.target.prototype);
+    Object.setPrototypeOf(this, new.target.prototype);
 
-        this.name = name;
-        this.statusCode = statusCode;
-        this.isOperational = isOperational;
+    this.name = name;
+    this.statusCode = statusCode;
+    this.isOperational = isOperational;
 
-        Error.captureStackTrace(this);
-    }
+    Error.captureStackTrace(this);
+  }
 }
 
 export default BaseError;

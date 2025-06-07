@@ -6,4 +6,4 @@ export const handleGlobalError = (error: unknown) => {
   if (error instanceof BaseError && !error.isOperational) {
     process.exit(1);
   }
-}
+};
