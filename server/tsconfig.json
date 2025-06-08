@@ -15,7 +15,8 @@
       "@types/*": ["types/*"],
       "@config/*": ["config/*"],
       "@libraries/*": ["libraries/*"]
-    }
+    },
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-  "include": ["src"]
+  "include": ["src", "src/types"]
 }

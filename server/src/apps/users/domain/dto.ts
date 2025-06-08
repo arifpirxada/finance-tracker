@@ -1,18 +1,5 @@
-import mongoose from 'mongoose';
+import { z } from 'zod';
+import { registerSchema, loginSchema } from '../validations/user.schema';
 
-export interface Account {
-  _id: mongoose.Types.ObjectId;
-  name: string;
-  type: 'Cash' | 'Bank account' | 'Other';
-  balance: number;
-}
-
-export interface User extends mongoose.Document {
-  name: string;
-  email: string;
-  password: string;
-  accounts: Account[];
-  tags: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type registerInput = z.infer<typeof registerSchema>;
+export type loginInput = z.infer<typeof loginSchema>;

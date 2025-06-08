@@ -6,7 +6,7 @@ const accountSchema = z.object({
   balance: z.number().default(0),
 });
 
-const userSchema = z.object({
+const registerSchema = z.object({
   name: z.string().trim().min(1, 'Name is required'),
   email: z.string().email('Invalid email'),
   password: z.string().min(4, 'Password must be at least 4 characters'),
@@ -14,6 +14,9 @@ const userSchema = z.object({
   tags: z.array(z.string()).default([]),
 });
 
-export type UserInput = z.infer<typeof userSchema>;
+const loginSchema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(4, 'Password must be at least 4 characters'),
+});
 
-export default userSchema;
+export { registerSchema, loginSchema };

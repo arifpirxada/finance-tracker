@@ -31,7 +31,8 @@ module.exports = [
       '@typescript-eslint': eslintPluginTs,
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^HttpStatusCode$' }],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^HttpStatusCode$' }],
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
     },

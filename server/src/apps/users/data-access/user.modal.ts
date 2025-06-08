@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { IUser } from 'types';
 
 const accountSchema = new mongoose.Schema({
   _id: {
@@ -50,6 +51,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const userModel = mongoose.model('user', userSchema);
+const UserModel = mongoose.model<IUser>('user', userSchema);
 
-export default userModel;
+export default UserModel;

@@ -22,18 +22,30 @@ const registerUser = async (
     res.status(HttpStatusCode.CREATED).json({
       success: true,
       message: 'Insertion successful',
-      user: {
-        name: user.name,
-        email: user.email,
-        accounts: user.accounts,
-        tags: user.tags,
-      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const loginUser = () => {};
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await userService.loginUser(req.body);
+
+    res.cookie('access_token', user.token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    });
+
+    res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: 'Login successful',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export default { registerUser, loginUser };
