@@ -17,17 +17,18 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
     );
   }
 
-  try {
-    const decoded = authService.verifyToken(token) as JwtPayload;
-    req.userId = decoded.id;
-    next();
-  } catch (err) {
+  const decoded = authService.verifyToken(token) as JwtPayload;
+
+  if (!decoded || !decoded.id) {
     throw new BaseError(
       'auth',
       HttpStatusCode.UNAUTHORIZED,
       'Invalid access token'
     );
   }
+
+  req.userId = decoded.id;
+  next();
 };
 
 export default auth;

@@ -10,6 +10,28 @@ export class UserService {
   private userRepo = new UserRepository();
   private authService = new AuthService();
 
+  async getUser(userId: string | undefined) {
+    if (!userId) {
+      throw new BaseError(
+        'get user',
+        HttpStatusCode.BAD_REQUEST,
+        'Could not get user Id'
+      );
+    }
+
+    const user = await this.userRepo.findUserById(userId);
+
+    if (!user) {
+      throw new BaseError(
+        'get user',
+        HttpStatusCode.NOT_FOUND,
+        'User not found'
+      );
+    }
+
+    return user;
+  }
+
   async createUser(userData: registerInput) {
     const validated = registerSchema.parse(userData);
 
@@ -26,7 +48,7 @@ export class UserService {
   async loginUser(input: loginInput) {
     const validated = loginSchema.parse(input); // zod validation
 
-    const user = await this.userRepo.findUser(validated.email);
+    const user = await this.userRepo.findUserByEmail(validated.email);
 
     if (!user) {
       throw new BaseError(

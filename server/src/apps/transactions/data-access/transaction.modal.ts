@@ -21,6 +21,6 @@ const transactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const transactionModel = mongoose.model('transaction', transactionSchema);
+const TransactionModel = mongoose.model('transaction', transactionSchema);
 
-export default transactionModel;
+export default TransactionModel;

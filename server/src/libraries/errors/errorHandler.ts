@@ -4,16 +4,25 @@ import { HttpStatusCode } from 'types';
 import { ZodError } from 'zod';
 
 export const handleError = (
-  err: Error,
+  err: any,
   req: Request,
   res: Response,
   _next: NextFunction
-) => {
+): void => {
   if (err instanceof ZodError) {
     res.status(422).json({
       success: false,
       message: 'Validation error',
       issues: err.issues,
+    });
+    return;
+  }
+
+  // Catch Mongoose CastError (invalid ObjectId)
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    res.status(HttpStatusCode.BAD_REQUEST).json({
+      success: false,
+      message: 'Invalid ID format',
     });
     return;
   }

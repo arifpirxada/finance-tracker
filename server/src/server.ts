@@ -22,7 +22,7 @@ import { handleGlobalError } from 'libraries/errors/globalErrorHandler';
       handleGlobalError(error);
     });
   } catch (error) {
-    console.error('Failed to connect to DB, exiting.'), error;
+    console.error('Failed to connect to DB, exiting.', error);
     process.exit(1);
   }
 })();

@@ -4,11 +4,12 @@ import morgan from 'morgan';
 import { handleError } from 'libraries/errors/errorHandler';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './docs/swagger';
-import auth from 'middlewares/auth.middleware';
 import cookieParser from 'cookie-parser';
 
 // route imports
 import { userRouter } from './apps/users';
+import { userBankRouter } from './apps/users';
+import { transactionRouter } from '@apps/transactions';
 
 const app = express();
 
@@ -26,11 +27,9 @@ app.get('/', (req, res) => {
   res.send('Welcome');
 });
 
-app.get('/auth', auth, (req, res) => {
-  res.send('Authenticated');
-});
-
 app.use('/users', userRouter);
+app.use('/users/bank-accounts', userBankRouter);
+app.use('/transactions', transactionRouter)
 
 // Global error middleware
 app.use(handleError);

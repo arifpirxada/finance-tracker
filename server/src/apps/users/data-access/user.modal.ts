@@ -2,6 +2,24 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { IUser } from 'types';
 
+const supportedCurrencies = [
+  'USD', // US Dollar
+  'EUR', // Euro
+  'INR', // Indian Rupee
+  'GBP', // British Pound
+  'JPY', // Japanese Yen
+  'AUD', // Australian Dollar
+  'CAD', // Canadian Dollar
+  'CHF', // Swiss Franc
+  'CNY', // Chinese Yuan
+  'SEK', // Swedish Krona
+  'NZD', // New Zealand Dollar
+  'SGD', // Singapore Dollar
+  'HKD', // Hong Kong Dollar
+  'ZAR', // South African Rand
+  'AED', // UAE Dirham
+];
+
 const accountSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -19,6 +37,7 @@ const accountSchema = new mongoose.Schema({
   balance: {
     type: Number,
     default: 0,
+    min: [0, 'Balance cannot be negative']
   },
 });
 
@@ -39,7 +58,11 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     accounts: [accountSchema],
-    tags: [String],
+    currency: {
+      type: String,
+      enum: supportedCurrencies,
+      default: 'INR'
+    }
   },
   { timestamps: true }
 );

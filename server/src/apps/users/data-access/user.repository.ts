@@ -26,8 +26,18 @@ export class UserRepository {
     }
   }
 
-  async findUser(email: string) {
-    const user = await UserModel.findOne({ email });
+  async findUserByEmail(email: string) {
+    const user = await UserModel.findOne({ email }).select(
+      '-createdAt -updatedAt -__v'
+    );
+
+    return user;
+  }
+
+  async findUserById(_id: string) {
+    const user = await UserModel.findOne({ _id }).select(
+      '-password -createdAt -updatedAt -__v -_id'
+    );
 
     return user;
   }

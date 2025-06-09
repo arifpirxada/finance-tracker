@@ -4,6 +4,19 @@ import { HttpStatusCode } from 'types';
 
 const userService = new UserService();
 
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await userService.getUser(req.userId);
+    res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: 'User fetched successfully',
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const registerUser = async (
   req: Request,
   res: Response,
@@ -48,4 +61,4 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { registerUser, loginUser };
+export default { getUser, registerUser, loginUser };
