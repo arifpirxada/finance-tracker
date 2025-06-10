@@ -1,15 +1,18 @@
 import { TransactionRepository } from '../data-access/transaction.repository';
-import { addTransactionSchema } from '../validations/transaction.schema';
 import {
-  addTransactionInput,
-  getTransactionsInput,
-  updateTransactionInput,
+  addTransactionSchema,
+  updateTransactionSchema,
+} from '../validations/transaction.schema';
+import {
+  AddTransactionInput,
+  GetTransactionsInput,
+  UpdateTransactionInput,
 } from './dto';
 
 export class TransactionService {
   private transactionRepo = new TransactionRepository();
 
-  async getTransactions(userId: string, query: getTransactionsInput) {
+  async getTransactions(userId: string, query: GetTransactionsInput) {
     const filter: any = { userId };
 
     if (query.type) filter.type = query.type;
@@ -48,7 +51,7 @@ export class TransactionService {
     return data;
   }
 
-  async addTransaction(transaction: addTransactionInput) {
+  async addTransaction(transaction: AddTransactionInput) {
     const validated = addTransactionSchema.parse(transaction);
     const transactionId =
       await this.transactionRepo.insertTransaction(validated);
@@ -56,7 +59,20 @@ export class TransactionService {
     return transactionId;
   }
 
-  async updateTransaction(transaction: updateTransactionInput) {}
+  async updateTransaction(userId: string, transaction: UpdateTransactionInput) {
+    const { transactionId, ...updateQuery } =
+      updateTransactionSchema.parse(transaction);
 
-  async deleteTransaction(userId: string, transactionId: string) {}
+    const updatedDoc = await this.transactionRepo.updateTransaction(
+      userId,
+      transactionId,
+      updateQuery
+    );
+
+    return updatedDoc;
+  }
+
+  async deleteTransaction(userId: string, transactionId: string) {
+    await this.transactionRepo.deleteTransaction(userId, transactionId);
+  }
 }

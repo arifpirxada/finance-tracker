@@ -12,7 +12,7 @@ function ensureReplicaSetParam(uri: string) {
 const connectDatabase = async () => {
   const URI = process.env.MONGO_URI;
   if (!URI) throw new Error('Database URI not defined');
-  
+
   ensureReplicaSetParam(URI);
 
   try {

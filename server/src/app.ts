@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRouter);
 app.use('/users/bank-accounts', userBankRouter);
-app.use('/transactions', transactionRouter)
+app.use('/transactions', transactionRouter);
 
 // Global error middleware
 app.use(handleError);

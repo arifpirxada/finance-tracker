@@ -1,14 +1,4 @@
 import { z } from 'zod';
-import { Types } from 'mongoose';
-
-const objectIdSchema = z.custom<Types.ObjectId>(
-  (val) => {
-    return Types.ObjectId.isValid(val);
-  },
-  {
-    message: 'Invalid ObjectId',
-  }
-);
 
 const addTransactionSchema = z
   .object({
@@ -31,13 +21,33 @@ const addTransactionSchema = z
     }
   });
 
-const updateTransactionSchema = z.object({
-  amount: z.number().min(0).optional(),
-  note: z.string().optional(),
-  type: z.enum(['expense', 'income', 'transfer']).optional(),
-  tags: z.array(z.string().optional()).optional(),
-  date: z.date().optional(),
-});
+const updateTransactionSchema = z
+  .object({
+    transactionId: z.string(),
+    amount: z.number().min(0).optional(),
+    note: z.string().optional(),
+    account: z.string().optional(),
+    toAccount: z.string().optional(),
+    type: z.enum(['expense', 'income', 'transfer']).optional(),
+    tags: z.array(z.string()).optional(),
+    date: z.date().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === 'transfer' && !data.toAccount) {
+      ctx.addIssue({
+        path: ['toAccount'],
+        code: z.ZodIssueCode.custom,
+        message: 'toAccount is required when type is "transfer".',
+      });
+    }
+    if (data.type !== 'transfer' && data.toAccount) {
+      ctx.addIssue({
+        path: ['toAccount'],
+        code: z.ZodIssueCode.custom,
+        message: 'toAccount should only be provided for transfers.',
+      });
+    }
+  });
 
 const getTransactionsQuerySchema = z.object({
   type: z.enum(['income', 'expense', 'transfer']).optional(),
@@ -55,7 +65,7 @@ const getTransactionsQuerySchema = z.object({
     ])
     .optional(),
   skip: z.coerce.number().default(0).optional(),
-  limit: z.coerce.number().max(100).default(20).optional()
+  limit: z.coerce.number().max(100).default(20).optional(),
 });
 
 export {

@@ -37,7 +37,7 @@ const accountSchema = new mongoose.Schema({
   balance: {
     type: Number,
     default: 0,
-    min: [0, 'Balance cannot be negative']
+    min: [0, 'Balance cannot be negative'],
   },
 });
 
@@ -61,8 +61,8 @@ const userSchema = new mongoose.Schema(
     currency: {
       type: String,
       enum: supportedCurrencies,
-      default: 'INR'
-    }
+      default: 'INR',
+    },
   },
   { timestamps: true }
 );

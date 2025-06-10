@@ -1,13 +1,17 @@
 import mongoose from 'mongoose';
-import { addTransactionInput } from '../domain/dto';
+import {
+  AddTransactionInput,
+  TransactionType,
+  UpdateQuery,
+} from '../domain/dto';
 import TransactionModel from './transaction.modal';
 import BaseError from '@libraries/errors/BaseError';
 import { HttpStatusCode } from 'types';
 import UserModel from '@apps/users/data-access/user.modal';
-import { toObjectId } from './transaction.helper';
+import { getBalanceUpdates, revertTransactionBalance, toObjectId, updateAccountBalance } from './transactionRepo.helper';
 
 export class TransactionRepository {
-  async insertTransaction(input: addTransactionInput) {
+  async insertTransaction(input: AddTransactionInput) {
     const session = await mongoose.startSession();
 
     async function checkBalance(
@@ -94,7 +98,7 @@ export class TransactionRepository {
 
       await session.commitTransaction();
       return newTransaction._id;
-    } catch (err) {
+    } catch {
       await session.abortTransaction();
       throw new BaseError(
         'Insert transaction session',
@@ -122,5 +126,70 @@ export class TransactionRepository {
       totalCount,
       transactions,
     };
+  }
+
+  async updateTransaction(
+    userId: string,
+    transactionId: string,
+    updateQuery: UpdateQuery
+  ) {
+    const doc = await TransactionModel.findOne({
+      _id: toObjectId(transactionId),
+      userId: toObjectId(userId),
+    });
+
+    if (!doc) {
+      throw new BaseError(
+        'No Doc',
+        HttpStatusCode.NOT_FOUND,
+        'Transaction not found while updating'
+      );
+    }
+
+    const updates = getBalanceUpdates(
+      doc.toObject() as TransactionType,
+      updateQuery
+    );
+
+    for (const action of updates) {
+      await updateAccountBalance(userId, action.accountId, action.delta)
+    }
+
+    const updatedDoc = await TransactionModel.findOneAndUpdate(
+      { _id: toObjectId(transactionId), userId: toObjectId(userId) },
+      { $set: updateQuery },
+      { new: true }
+    );
+
+    if (!updatedDoc) {
+      throw new BaseError(
+        'No Transaction',
+        HttpStatusCode.NOT_FOUND,
+        'Transaction not found while updating'
+      );
+    }
+
+    return updatedDoc;
+  }
+
+  async deleteTransaction(userId: string, transactionId: string) {
+    const deletedTransaction = await TransactionModel.findOneAndDelete({
+      _id: toObjectId(transactionId),
+      userId: toObjectId(userId),
+    });
+
+    if (!deletedTransaction) {
+      throw new BaseError(
+        'None Deleted',
+        HttpStatusCode.NOT_FOUND,
+        'Could not find and delete transaction'
+      );
+    }
+
+    // Adjust account balance
+
+    await revertTransactionBalance(userId, deletedTransaction as TransactionType)
+
+    return true;
   }
 }

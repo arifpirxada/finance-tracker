@@ -7,7 +7,7 @@ const registerSchema = z.object({
   password: z.string().min(4, 'Password must be at least 4 characters'),
   accounts: z.array(accountSchema).default([]),
   tags: z.array(z.string()).default([]),
-  currency: z.string()
+  currency: z.string(),
 });
 
 const loginSchema = z.object({
