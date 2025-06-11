@@ -15,6 +15,10 @@ const getTransactions = async (
   try {
     const query = getTransactionsQuerySchema.parse(req.query);
 
+    if (!req.userId) {
+      throw new BaseError('No user Id', HttpStatusCode.BAD_REQUEST, 'Could not get user Id')
+    }
+
     const data = await transactionService.getTransactions(req.userId!, query);
 
     res.status(HttpStatusCode.OK).json({

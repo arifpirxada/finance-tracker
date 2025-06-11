@@ -8,7 +8,12 @@ import TransactionModel from './transaction.modal';
 import BaseError from '@libraries/errors/BaseError';
 import { HttpStatusCode } from 'types';
 import UserModel from '@apps/users/data-access/user.modal';
-import { getBalanceUpdates, revertTransactionBalance, toObjectId, updateAccountBalance } from './transactionRepo.helper';
+import {
+  getBalanceUpdates,
+  revertTransactionBalance,
+  toObjectId,
+  updateAccountBalance,
+} from './transactionRepo.helper';
 
 export class TransactionRepository {
   async insertTransaction(input: AddTransactionInput) {
@@ -112,6 +117,7 @@ export class TransactionRepository {
 
   async getTransactions(filter: any, skip: number, limit: number) {
     const transactions = await TransactionModel.find(filter)
+      .select('-createdAt -updatedAt -__v')
       .sort({ date: -1 })
       .skip(skip)
       .limit(limit);
@@ -152,7 +158,7 @@ export class TransactionRepository {
     );
 
     for (const action of updates) {
-      await updateAccountBalance(userId, action.accountId, action.delta)
+      await updateAccountBalance(userId, action.accountId, action.delta);
     }
 
     const updatedDoc = await TransactionModel.findOneAndUpdate(
@@ -169,7 +175,9 @@ export class TransactionRepository {
       );
     }
 
-    return updatedDoc;
+    const { __v, createdAt, updatedAt, ...cleanedDoc } = updatedDoc.toObject();
+
+    return cleanedDoc;
   }
 
   async deleteTransaction(userId: string, transactionId: string) {
@@ -188,7 +196,10 @@ export class TransactionRepository {
 
     // Adjust account balance
 
-    await revertTransactionBalance(userId, deletedTransaction as TransactionType)
+    await revertTransactionBalance(
+      userId,
+      deletedTransaction as TransactionType
+    );
 
     return true;
   }

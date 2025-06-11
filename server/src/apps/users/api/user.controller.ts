@@ -61,4 +61,16 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { getUser, registerUser, loginUser };
+const logoutUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.clearCookie('access_token');
+    res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: 'Logout successful',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { getUser, registerUser, loginUser, logoutUser };

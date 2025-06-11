@@ -6,7 +6,6 @@ const registerSchema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string().min(4, 'Password must be at least 4 characters'),
   accounts: z.array(accountSchema).default([]),
-  tags: z.array(z.string()).default([]),
   currency: z.string(),
 });
 

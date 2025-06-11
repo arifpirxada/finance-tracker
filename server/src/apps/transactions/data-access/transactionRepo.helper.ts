@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 import { TransactionType, UpdateQuery } from '../domain/dto';
 import UserModel from '@apps/users/data-access/user.modal';
 
@@ -103,7 +103,11 @@ function getApplyBalanceActions(txn: TransactionType): BalanceUpdateAction[] {
   }
 }
 
-export const updateAccountBalance = async (userId: string | mongoose.Types.ObjectId, accountId: string | mongoose.Types.ObjectId, balanceChange: number) => {
+export const updateAccountBalance = async (
+  userId: string | mongoose.Types.ObjectId,
+  accountId: string | mongoose.Types.ObjectId,
+  balanceChange: number
+) => {
   return UserModel.updateOne(
     {
       _id: toObjectId(userId),
@@ -117,8 +121,10 @@ export const updateAccountBalance = async (userId: string | mongoose.Types.Objec
   );
 };
 
-
-export const revertTransactionBalance = async (userId: string, deletedTransaction: TransactionType) => {
+export const revertTransactionBalance = async (
+  userId: string,
+  deletedTransaction: TransactionType
+) => {
   const { amount, type, account, toAccount } = deletedTransaction;
 
   // Early return if no account is specified

@@ -17,7 +17,7 @@ export class BankRepository {
     if (!updatedUser) {
       throw new BaseError(
         'add account',
-        HttpStatusCode.BAD_REQUEST,
+        HttpStatusCode.NOT_FOUND,
         'User not found'
       );
     }
