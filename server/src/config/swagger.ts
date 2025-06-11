@@ -120,13 +120,6 @@ const options = {
                 },
               ],
             },
-            tags: {
-              type: 'array',
-              items: {
-                type: 'string',
-              },
-              example: ['food', 'groceries'],
-            },
             currency: {
               type: 'string',
               example: 'INR',
