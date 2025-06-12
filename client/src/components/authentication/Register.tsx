@@ -1,6 +1,8 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { registerSchema, type RegisterInput } from "@/features/auth/authSchema";
+import { authenticateUser, registerUser } from "@/features/auth/authApi";
+import { useNavigate } from 'react-router-dom';
 
 import pcImg from '@/assets/imgs/girl-with-pc.jpg'
 
@@ -22,7 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Loader2Icon } from "lucide-react";
+import { login } from "@/features/auth/authSlice";
 
 const supportedCurrencies = [
   { code: 'USD', name: 'US Dollar' },
@@ -42,19 +48,17 @@ const supportedCurrencies = [
   { code: 'AED', name: 'UAE Dirham' },
 ];
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name is too short"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(4, "Password is too short"),
-  currency: z.string(),
-  accountName: z.string().min(2, "Account name is too short"),
-  accountType: z.enum(['Cash', 'Bank account', 'Other']),
-  accountBalance: z.number().min(0, "Balance can't be negative")
-});
-
 export default function Register() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+
+  // Redirect user if logged in
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
+  const [customError, setCustomError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -66,16 +70,43 @@ export default function Register() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-  };
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async (values: RegisterInput) => {
+    try {
+      setLoading(true);
+      const data = await registerUser(values);
+
+      if (!data?.success) {
+        setCustomError(data.message || "Something went wrong! Please try later")
+        return;
+      }
+
+      setCustomError("");
+      setSuccessMessage(data.message || "Registration successful");
+
+      const user = await authenticateUser();
+      dispatch(login(user));
+
+      setLoading(false);
+      navigate("/");
+    } catch (error: any) {
+      setLoading(false);
+      setCustomError(error.message || "Something went wrong! Please try later");
+    }
+  }
+
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
-    <div className="gradient-bg p-8 h-screen flex flex-wrap gap-8 md:gap-8 lg:gap-16 justify-center items-center">
+    <div className="gradient-bg p-8 min-h-screen flex flex-wrap gap-8 md:gap-8 lg:gap-16 justify-center items-center">
       <div className="w-full lg:w-1/4 md:w-10/12">
         <h1 className="text-3xl mb-8">Register - Finance Tracker</h1>
         <Form { ...form }>
-          <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-6">
+          <form onSubmit={ form.handleSubmit(handleSubmit) } className="space-y-6">
 
             <FormField
               control={ form.control }
@@ -170,7 +201,7 @@ export default function Register() {
                   render={ ({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Account Balance" { ...field } />
+                        <Input type="number" placeholder="Account Balance" { ...field } />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -184,7 +215,7 @@ export default function Register() {
                   name="currency"
                   render={ ({ field }) => (
                     <div className="space-y-2">
-                      {/* <FormLabel>Currency</FormLabel> */}
+                      {/* <FormLabel>Currency</FormLabel> */ }
                       <Select
                         onValueChange={ field.onChange }
                         value={ field.value }
@@ -215,7 +246,13 @@ export default function Register() {
             </div>
 
             <p>Already registered? <Link className="text-blue-500" to="/login">Login</Link></p>
-            <Button type="submit">Submit</Button>
+            <p className="text-red-400">{ customError }</p>
+            <p className="text-green-400">{ successMessage }</p>
+            <Button type="submit">
+              { loading && <><Loader2Icon className="animate-spin" />
+                Please wait</> }
+              { !loading && <>Login</> }
+            </Button>
           </form>
         </Form>
       </div>

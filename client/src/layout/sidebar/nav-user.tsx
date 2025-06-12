@@ -27,16 +27,39 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import defaultUserImg from "@/assets/imgs/default-user.png"
+import { logoutUser } from "@/features/auth/authApi"
+import { useAppDispatch } from "@/store/hooks"
+import { useNavigate } from "react-router-dom"
+import { logout } from "@/features/auth/authSlice"
+
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
+    name: string | undefined
+    email: string | undefined
   }
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const data = await logoutUser();
+
+      if (!data?.success) {
+        alert("Sorry could not logout! please try later")
+      }
+      dispatch(logout());
+      navigate("/")
+    } catch (error: any) {
+      alert("Sorry could not logout! please try later")
+      console.error(error.message || "An error occured while logging out user");
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -48,13 +71,13 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={ defaultUserImg } alt={ user.name } />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">{ user.name }</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
+                  { user.email }
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
@@ -62,20 +85,20 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={ isMobile ? "bottom" : "right" }
             align="end"
-            sideOffset={4}
+            sideOffset={ 4 }
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={ defaultUserImg } alt={ user.name } />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">{ user.name }</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
+                    { user.email }
                   </span>
                 </div>
               </div>
@@ -96,7 +119,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={ handleLogout }>
               <IconLogout />
               Log out
             </DropdownMenuItem>

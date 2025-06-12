@@ -1,5 +1,6 @@
 "use client"
 
+import { useAppSelector } from "@/store/hooks"
 import logo from "../../assets/logo.png"
 
 import { NavMain } from "./nav-main"
@@ -17,7 +18,20 @@ import {
 import data from "@/utils/navbarData"
 import { Link } from "react-router-dom"
 
+import { Button } from "@/components/ui/button"
+import { LogIn } from "lucide-react"
+
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+    const user = useAppSelector((state) => state.auth.user);
+
+    const userData = {
+        name: user?.name,
+        email: user?.email
+    }
+
     return (
         <Sidebar collapsible="offcanvas" { ...props }>
             <SidebarHeader>
@@ -39,7 +53,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavMain items={ data.navMain } />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={ data.user } />
+                {isLoggedIn && <NavUser user={ userData } />}
+                {!isLoggedIn && <Button variant="outline" size="sm">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    <Link className="w-full" to="/login">Login</Link>
+                </Button>}
             </SidebarFooter>
         </Sidebar>
     )

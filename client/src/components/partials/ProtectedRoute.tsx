@@ -1,13 +1,15 @@
 import { Navigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-  const token = localStorage.getItem("access_token");
 
-  if (!token) {
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
+  if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
 
