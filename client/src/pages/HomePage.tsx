@@ -11,7 +11,7 @@ function HomePage() {
   return (
     <Card className="bg-muted p-10 rounded-2xl text-center shadow-md m-8">
       <CardContent>
-        <h1 className="text-4xl font-bold mb-4">{user?.name} - welcome to Expense Flux</h1>
+        <h1 className="text-4xl font-bold mb-4">{isLoggedIn ? user?.name + " - welcome to Expense Flux" : "Welcome to Expense Flux"}</h1>
         <p className="text-muted-foreground mb-6">
           All your transactions, clear and organized in one place.
         </p>

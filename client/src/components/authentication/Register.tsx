@@ -251,7 +251,7 @@ export default function Register() {
             <Button type="submit">
               { loading && <><Loader2Icon className="animate-spin" />
                 Please wait</> }
-              { !loading && <>Login</> }
+              { !loading && <>Register</> }
             </Button>
           </form>
         </Form>
