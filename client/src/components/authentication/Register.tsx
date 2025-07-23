@@ -29,6 +29,8 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Loader2Icon } from "lucide-react";
 import { login } from "@/features/auth/authSlice";
+import { addAccount } from "@/features/accounts/accountApi";
+import type { AddAccountInput } from "@/features/accounts/accountSchema";
 
 const supportedCurrencies = [
   { code: 'USD', name: 'US Dollar' },
@@ -76,6 +78,8 @@ export default function Register() {
   const handleSubmit = async (values: RegisterInput) => {
     try {
       setLoading(true);
+
+      // Register user
       const data = await registerUser(values);
 
       if (!data?.success) {
@@ -86,6 +90,17 @@ export default function Register() {
       setCustomError("");
       setSuccessMessage(data.message || "Registration successful");
 
+      // Add Account
+
+      const accountInput: AddAccountInput = {
+        name: values.accountName,
+        type: values.accountType,
+        balance: values.accountBalance
+      }
+
+      await addAccount(accountInput);
+
+      // Authenticate user
       const user = await authenticateUser();
       dispatch(login(user));
 

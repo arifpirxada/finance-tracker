@@ -12,9 +12,9 @@ function HomePage() {
 
   return (
     <>
-      <Card className="bg-muted p-10 rounded-2xl text-center shadow-md m-8">
+      <Card className="bg-muted md:p-4 lg:p-10 rounded-2xl text-center shadow-md m-4 md:m-8">
         <CardContent>
-          <h1 className="text-4xl font-bold mb-4">{ isLoggedIn ? user?.name + " - welcome to Expense Flux" : "Welcome to Expense Flux" }</h1>
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-4">{ isLoggedIn ? user?.name + " - welcome to Expense Flux" : "Welcome to Expense Flux" }</h1>
           <p className="text-muted-foreground mb-6">
             All your transactions, clear and organized in one place.
           </p>
@@ -25,8 +25,8 @@ function HomePage() {
         </CardContent>
       </Card>
       { isLoggedIn &&
-        <div className="homepage-forms d-flex">
-          <AddTransaction />
+        <div className="homepage-forms md:flex md:p-4">
+          { user?.accounts.length !== 0 && <AddTransaction /> }
           <AddAccount />
         </div> }
     </>

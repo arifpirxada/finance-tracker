@@ -3,7 +3,7 @@ import { z } from 'zod';
 const addAccountSchema = z.object({
   name: z.string().trim(),
   type: z.enum(['Cash', 'Bank account', 'Other']),
-  balance: z.number(),
+  balance: z.coerce.number(),
 });
 
 const updateAccountSchema = z.object({

@@ -103,12 +103,12 @@ export class TransactionRepository {
 
       await session.commitTransaction();
       return newTransaction._id;
-    } catch {
+    } catch (err: any) {
       await session.abortTransaction();
       throw new BaseError(
         'Insert transaction session',
         HttpStatusCode.INTERNAL_SERVER,
-        'Failed to insert transaction and update user account balance'
+        err.message || 'Failed to insert transaction and update user account balance'
       );
     } finally {
       session.endSession();

@@ -12,7 +12,7 @@ router.use(auth);
 
 /**
  * @swagger
- * /bank:
+ * /users/bank-accounts:
  *   post:
  *     summary: Add a new bank account
  *     tags: [Bank]
@@ -78,7 +78,7 @@ router.post('/', addBankAccount);
 
 /**
  * @swagger
- * /bank/{id}:
+ * /users/bank-accounts/{id}:
  *   put:
  *     summary: Update a bank account
  *     tags: [Bank]
@@ -149,7 +149,7 @@ router.put('/:id', updateBankAccount);
 
 /**
  * @swagger
- * /bank/{id}:
+ * /users/bank-accounts/{id}:
  *   delete:
  *     summary: Delete a bank account
  *     tags: [Bank]

@@ -7,8 +7,8 @@ export const addTransactionSchema = z
     account: z.string(), // from account id
     toAccount: z.string().optional(), // to account id
     type: z.enum(["expense", "income", "transfer"]),
-    tags: z.array(z.string().optional()),
-    date: z.date(),
+    tags: z.string().optional(),
+    date: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.type === "transfer" && !data.toAccount) {

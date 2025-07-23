@@ -2,12 +2,11 @@ import type { AxiosError } from "axios";
 import axios from "@/lib/axios";
 import type { AddAccountInput } from "./accountSchema";
 
-const addAccount = async (values: AddAccountInput) => {
+export const addAccount = async (values: AddAccountInput) => {
   try {
-    const response = await axios.post("/bank", values);
+    const response = await axios.post("/users/bank-accounts", values);
 
-    console.log(response)
-    return response.data.data;
+    return response.data;
   } catch (err) {
     const error = err as AxiosError<{ success: false; message: string }>;
 
