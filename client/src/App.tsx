@@ -15,7 +15,7 @@ function App() {
       try {
         const user = await authenticateUser();
         dispatch(login(user));
-      } catch (error) {
+      } catch {
         dispatch(logout());
       }
     };

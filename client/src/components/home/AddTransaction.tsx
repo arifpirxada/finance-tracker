@@ -63,6 +63,8 @@ export default function AddTransaction() {
                 setSuccessMessage("");
             }, 3000);
 
+            form.reset()
+
             setLoading(false);
         } catch (error: any) {
             setLoading(false);

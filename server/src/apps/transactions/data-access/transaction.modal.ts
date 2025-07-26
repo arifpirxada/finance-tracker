@@ -9,7 +9,10 @@ const transactionSchema = new mongoose.Schema(
     },
     note: String,
     account: mongoose.Schema.Types.ObjectId,
-    toAccount: mongoose.Schema.Types.ObjectId,
+    toAccount: {
+      type: mongoose.Schema.Types.ObjectId,
+      set: (v: any) => (v === "" ? null : v)
+    },
     type: {
       type: String,
       enum: ['expense', 'income', 'transfer'],

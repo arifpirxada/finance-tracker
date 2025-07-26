@@ -189,7 +189,7 @@ router.get('/', getTransactions);
  *                 type: array
  *                 items:
  *                   type: string
- *                   example: ['sold']
+ *                   example: 'sold'
  *               date:
  *                 type: string
  *                 format: date-time
