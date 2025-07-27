@@ -1,7 +1,7 @@
 export interface Account {
     _id: string,
     name: string,
-    type: 'income' | 'expense' | 'transfer',
+    type: "Bank account" | "Cash" | "Other",
     balance: number
 }
 

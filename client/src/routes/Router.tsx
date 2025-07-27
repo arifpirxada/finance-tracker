@@ -4,6 +4,7 @@ import Transactions from "@/pages/Transactions";
 import Login from "@/components/authentication/Login";
 import Register from "@/components/authentication/Register";
 import ProtectedRoute from "@/components/partials/ProtectedRoute";
+import Reports from "@/pages/Reports";
 
 const Router = () => {
     return (
@@ -12,6 +13,7 @@ const Router = () => {
             <Route path="/login" element={ <Login /> } />
             <Route path="/register" element={ <Register /> } />
             <Route path="/transactions" element={ <ProtectedRoute><Transactions /></ProtectedRoute> } />
+            <Route path="/reports" element={ <ProtectedRoute><Reports /></ProtectedRoute> } />
             <Route path="*" element={ <div className="text-red-600 text-2xl px-8 text-center">Page not found</div> } />
         </Routes>
     )

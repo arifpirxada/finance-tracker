@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "@/store/hooks"
 import AddTransaction from "@/components/home/AddTransaction";
 import AddAccount from "@/components/home/AddAccount";
+import AccountList from "@/components/home/account_list/AccountList";
 
 function HomePage() {
 
@@ -25,9 +26,12 @@ function HomePage() {
         </CardContent>
       </Card>
       { isLoggedIn &&
-        <div className="homepage-forms md:flex md:p-4">
+        <div className="homepage-forms lg:flex md:p-4">
           { user?.accounts.length !== 0 && <AddTransaction /> }
-          <AddAccount />
+          <div>
+            <AddAccount />
+            <AccountList />
+          </div>
         </div> }
     </>
   )

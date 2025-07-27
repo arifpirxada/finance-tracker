@@ -1,6 +1,10 @@
+import { IncomeExpenseChart } from "@/components/reports/IncomeExpenseChart"
+
 function Reports() {
   return (
-    <div>Reports</div>
+    <div className="px-8">
+      <IncomeExpenseChart />
+    </div>
   )
 }
 
