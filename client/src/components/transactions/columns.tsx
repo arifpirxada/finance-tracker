@@ -2,78 +2,70 @@
 
 import { type ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { type Transaction } from "@/types"
 
 export const columns: ColumnDef<Transaction>[] = [
     {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={ table.getIsAllPageRowsSelected() }
-                onCheckedChange={ (value) => table.toggleAllPageRowsSelected(!!value) }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={ row.getIsSelected() }
-                onCheckedChange={ (value) => row.toggleSelected(!!value) }
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-        size: 50, // optional: makes column narrower
+        accessorKey: "note",
+        header: "Note",
     },
     {
-        accessorKey: "title",
-        header: "Article Title",
+        accessorKey: "amount",
+        header: "Amount",
     },
     {
-        accessorKey: "keyword",
-        header: "Keyword [Traffic]",
+        accessorKey: "type",
+        header: "Type",
     },
     {
-        accessorKey: "words",
-        header: "Words",
+        accessorKey: "account",
+        header: "Account",
     },
     {
-        accessorKey: "created",
-        header: "Created On",
+        accessorKey: "toAccount",
+        header: "To Account",
     },
     {
-        accessorKey: "action",
+        accessorKey: "Date",
+        header: "Date",
+        cell: ({ row }) => {
+            const formattedDate = row.original.date ? new Date(row.original.date).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            }) : '';
+
+            const formattedTime = row.original.date ? new Date(row.original.date).toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
+            }) : '';
+
+            return (
+                <span>
+                    { formattedDate }
+                    <br />
+                    { formattedTime }
+                </span>
+            )
+        }
+    },
+    {
+        accessorKey: "_id",
         header: "Action",
         cell: ({ row }) => {
-            const article = row.original
+            const transaction = row.original
 
             return (
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={ () => alert(`View article, id: ${article.id}`) }
+                    onClick={ () => alert(`View article, id: ${transaction._id}`) }
                 >
                     View
                 </Button>
             )
         },
-    },
-    {
-        accessorKey: "Publish",
-        header: "Publish",
-        cell: ({ row }) => {
-            const article = row.original
-
-            return (
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={ () => alert(`Publish article, id: ${article.id}`) }
-                >
-                    Publish
-                </Button>
-            )
-        },
-    },
+    }
 ]

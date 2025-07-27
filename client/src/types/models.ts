@@ -1,7 +1,11 @@
 export interface Transaction {
-    id: number
-    title: string
-    keyword: string
-    words: number
-    created: string
+    _id: string,
+    userId: string,
+    type: 'income' | 'expense' | 'transfer',
+    note: string,
+    amount: number,
+    tags: string[],
+    account: string,
+    toAccount: string,
+    date: string
 }

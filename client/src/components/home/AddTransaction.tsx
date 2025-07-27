@@ -207,7 +207,7 @@ export default function AddTransaction() {
                                     <Input placeholder="tag1, tag2, tag3..." { ...field } />
                                 </FormControl>
                                 <FormDescription>
-                                    Date of Transaction
+                                    Add tags seperated by comma
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -219,12 +219,12 @@ export default function AddTransaction() {
                         name="date"
                         render={ ({ field }) => (
                             <FormItem>
-                                <FormLabel>Tags</FormLabel>
+                                <FormLabel>Date</FormLabel>
                                 <FormControl>
                                     <Input type="datetime-local" placeholder="Date" { ...field } />
                                 </FormControl>
                                 <FormDescription>
-                                    Add tags seperated by comma
+                                    Date of Transaction
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
