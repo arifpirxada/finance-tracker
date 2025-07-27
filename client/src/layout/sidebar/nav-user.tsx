@@ -55,9 +55,13 @@ export function NavUser({
       }
       dispatch(logout());
       navigate("/")
-    } catch (error: any) {
+    } catch (error: unknown) {
       alert("Sorry could not logout! please try later")
-      console.error(error.message || "An error occured while logging out user");
+      if (error instanceof Error) {
+        console.error(error.message || "An error occured while logging out user");
+      } else {
+        console.error("Something went wrong while logging out");
+      }
     }
   }
 

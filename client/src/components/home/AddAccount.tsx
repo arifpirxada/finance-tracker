@@ -55,9 +55,14 @@ export default function AddAccount() {
             }, 3000);
 
             setLoading(false);
-        } catch (error: any) {
+        } catch (error: unknown) {
             setLoading(false);
-            setCustomError(error.message || "Something went wrong! Please try later");
+
+            if (error instanceof Error) {
+                setCustomError(error.message || "Something went wrong! Please try later");
+            } else {
+                setCustomError("Something went wrong! Please try later");
+            }
         }
     }
 
