@@ -1,6 +1,5 @@
-import { type Article } from "@/components/transactions/columns"
 
-const transactionData: Article[] = [
+const transactionData = [
     {
         id: 1,
         title: "How to Improve Your Skills in League of Legends",
